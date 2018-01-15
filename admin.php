@@ -13,7 +13,7 @@ if(isset($_POST['button']))
 	//用户输入的用户名和密码
 	$StudentID=$_POST['StudentID'];
 	$password=$_POST['password'];
-	}
+	
 	//连接数据库
 	mysql_connect('127.0.0.1','root','') or die (mysql_error()); //显示错误信息
 	mysql_select_db('tradingmall'); //选择数据库
@@ -30,6 +30,7 @@ if(isset($_POST['button']))
 		}else{
 			echo '登录失败';
 			}
+}
 ?>
 
     <form name="form1" method="post" action="">
