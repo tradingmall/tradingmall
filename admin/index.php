@@ -2,51 +2,110 @@
 <html>
 <head>
 <meta charset="gb2312">
-<title>åŽå°ç®¡ç†ç³»ç»Ÿ</title>
+<title>ºóÌ¨¹ÜÀíÏµÍ³</title>
+
 </head>
 <body>
-
-	<?php
-        //è¿žæŽ¥æ•°æ®åº“
-        mysql_connect('127.0.0.1','root','') or die (mysql_error()); //æ˜¾ç¤ºé”™è¯¯ä¿¡æ¯
-        mysql_select_db('tradingmall'); //é€‰æ‹©æ•°æ®åº“
-        mysql_query('set names gb2312'); //è®¾ç½®å®¢æˆ·ç«¯å­—ç¬¦ç¼–ç 
-        $record=mysql_query('select * from users');
-    ?>
-    <a href="add.php">æ·»åŠ ä¿¡æ¯</a>
-<form name="form1" method="post" action="">
-  <table width="980" border="1" align="center">
-        <tr>
-            <th width="228" align="center" valign="middle">å­¦é™¢</th>
-            <th width="156" align="center" valign="middle">å­¦å·</th>
-            <th width="104" align="center" valign="middle">ç­çº§</th>
-            <th width="80" align="center" valign="middle">å§“å</th>
-            <th width="79" align="center" valign="middle">æ€§åˆ«</th>
-            <th width="210" align="center" valign="middle">ä¸“ä¸š</th>
-            <th width="77" align="center" valign="middle">åœ°åŒº</th>
-    </tr>
-     <?php
-		//å¾ªçŽ¯åŒ¹é…æˆå…³è”æ•°ç»„
-		while($rows=mysql_fetch_assoc($record))
-		{
-			echo '<tr>';
-			echo '<td width="228" align="center" valign="middle">'.$rows['College'].'</td>';
-			echo '<td width="156" align="center" valign="middle">'.$rows['StudentID'].'</td>';
-			echo '<td width="104" align="center" valign="middle">'.$rows['Class'].'</td>';
-			echo '<td width="80" align="center" valign="middle">'.$rows['Name'].'</td>';
-			echo '<td width="79" align="center" valign="middle">'.$rows['Sex'].'</td>';
-			echo '<td width="210" align="center" valign="middle">'.$rows['Major'].'</td>';
-			echo '<td width="77" align="center" valign="middle">'.$rows['District'].'</td>';
-			echo '<td><input type="button" value="ä¿®æ”¹" /></td>';
-			echo '<td><input type="button" value="åˆ é™¤" /></td>';
-			echo '</tr>';
-		 }
-   	 ?>
-  </table>
-</form>
-<p>&nbsp;</p>
-
+<script type="text/javascript">
+function Confirm(id){
+	if(confirm('È·¶¨ÒªÉ¾³ý´ËÐÅÏ¢Âð'))
+	{
+		location.href='delete.php?id='+id}
+	}
+</script>
+<?php
+	//Á¬½ÓÊý¾Ý¿â
+	mysql_connect('127.0.0.1','root','') or die (mysql_error()); //ÏÔÊ¾´íÎóÐÅÏ¢
+	mysql_select_db('tradingmall'); //Ñ¡ÔñÊý¾Ý¿â
+	mysql_query('set names gb2312'); //ÉèÖÃ¿Í»§¶Ë×Ö·û±àÂë
+	$record=mysql_query('select * from users limit 100');
+?>
+    <a href="add.php">Ìí¼ÓÐÅÏ¢</a>
     
+ <?php
+	
+	//¶¨ÒåÒ³Ãæ´óÐ¡
+	$pagesize=50;
+	
+	//Çó×Ü¼ÇÂ¼Êý
+	$record=mysql_query('select count(*) from users');
+	$rows=mysql_fetch_row($record); //½«×ÊÔ´Æ¥Åä³ÉË÷ÒýÊý×é
+	$recordcount=$rows[0];	//×Ü¼ÇÂ¼Êý
+	//echo $recordcount;
+	
+	//Çó×ÜÒ³Êý
+	$pagecount=ceil($recordcount/$pagesize);//ÏòÉÏÈ¡Õû
+	//echo $pagecount;
+	
+	//»ñµÃ´«µÝµÄµ±Ç°Ò³Âë
+	$pageno=isset($_GET['pageno'])?$_GET['pageno']:1;
+	if($pageno<1){$pageno=1;}
+	if($pageno>$pagecount){$pageno=$pagecount;}
+	//echo $pageno;
+	
+	//Çóµ±Ç°Ò³µÄÆðÊ¼Î»ÖÃ
+	$startno=($pageno-1)*$pagesize;
+	
+	//»ñÈ¡µ±Ç°Ò³ÃæµÄÄÚÈÝ
+	$sql="select * from users limit $startno,$pagesize";
+	$record=mysql_query($sql);
+	
+?>
+    
+<form name="form1" method="post" action="">
+<table width="980" border="#000" align="center";>
+<tr>
+    <th width="228" align="center" valign="middle">Ñ§Ôº</th>
+    <th width="156" align="center" valign="middle">Ñ§ºÅ</th>
+    <th width="104" align="center" valign="middle">°à¼¶</th>
+    <th width="80" align="center" valign="middle">ÐÕÃû</th>
+    <th width="79" align="center" valign="middle">ÐÔ±ð</th>
+    <th width="210" align="center" valign="middle">×¨Òµ</th>
+    <th width="77" align="center" valign="middle">µØÇø</th>
+</tr>
+ <?php
+    //Ñ­»·Æ¥Åä³É¹ØÁªÊý×é
+    while($rows=mysql_fetch_assoc($record))
+    {
+        echo '<tr>';
+        echo '<td width="228" align="center" valign="middle">'.$rows['College'].'</td>';
+        echo '<td width="156" align="center" valign="middle">'.$rows['StudentID'].'</td>';
+        echo '<td width="104" align="center" valign="middle">'.$rows['Class'].'</td>';
+        echo '<td width="80" align="center" valign="middle">'.$rows['Name'].'</td>';
+        echo '<td width="79" align="center" valign="middle">'.$rows['Sex'].'</td>';
+        echo '<td width="210" align="center" valign="middle">'.$rows['Major'].'</td>';
+        echo '<td width="77" align="center" valign="middle">'.$rows['District'].'</td>';
+        echo '<td><input type="button" value="ÐÞ¸Ä" onClick="location.href=\'modify.php?id='.$rows['StudentID'].'\'"/></td>';
+        echo '<td><input type="button" value="É¾³ý" onClick="Confirm('.$rows['StudentID'].')"/></td>';
+        echo '</tr>';
+     }
+ ?>
+</table>
+</form>
+	<p>&nbsp;</p>
+    
+<!--Ñ­»·Êä³öÒ³Âë-->
+<table width="580" border="#000" align="center";>
+<tr>
+	<td align="right">
+    ¡¾<a href="?pageno=1">Ê×Ò³</a>¡¿
+    ¡¾<a href="?pageno=<?php echo $pageno-1?>">ÉÏÒ»Ò³</a>¡¿
+    </td>
+	<td width="17">
+    <?php
+    for($i=$pageno;$i<=$pageno+10;$i++)
+	{
+		echo '<a href="pagination.php?pageno='.$i.'">'.$i.'</a>&nbsp;';
+		}
+	?>
+    </td>
+    <td align="left">    
+    ¡¾<a href="?pageno=<?php echo $pageno+1?>">ÏÂÒ»Ò³</a>¡¿
+    ¡¾<a href="?pageno=<?php echo $pagecount?>">Ä©Ò³</a>¡¿
+    </td>
+</tr>
+</table>
+
     
 </body>
 </html>
